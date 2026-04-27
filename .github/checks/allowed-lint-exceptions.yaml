@@ -1,0 +1,97 @@
+# Curated list of allowed #[expect(...)] and #[allow(...)] annotations.
+#
+# Every occurrence in the codebase MUST have an entry here, or the
+# structure-check will fire an ERROR. This keeps lint suppression
+# intentional, visible, and continuously reviewed.
+#
+# Fields:
+#   path          — file path relative to repo root
+#   match         — exact string that appears on the annotation line(s)
+#   reason        — why this exception is currently accepted
+#   strategy      — ideas to eventually eliminate it
+#
+# To add a new exception: append an entry, run the structure-check,
+# and ensure it passes. To remove one: delete the entry AND the
+# annotation from the source code.
+
+exceptions:
+  # ── cast.rs: Safe numeric casting infrastructure ─────────────────
+
+  - path: "crates/cp-base/src/cast.rs"
+    match: "lossy int→float: mantissa too narrow — inherent floating-point limitation"
+    reason: >
+      Module-level #[expect] on mod lossy_float covers all 12 lossy
+      int→float casts (u32/u64/u128/usize/i32/i64/isize → f32/f64).
+      Mantissa width (24-bit f32, 53-bit f64) fundamentally cannot
+      represent all values of wider integer types.
+    strategy: >
+      Irreducible — fundamental floating-point limitation.
+
+  - path: "crates/cp-base/src/cast.rs"
+    match: "saturating float→int: no TryFrom<float> for integers in std"
+    reason: >
+      Module-level #[expect] on mod float_to_int covers f64 and f32
+      Safe impls. No TryFrom<f64/f32> for integer types exists in std,
+      so raw `as` with manual bounds checking is the only path.
+    strategy: >
+      Irreducible until std provides TryFrom<f64> for integers.
+
+  # ── config/mod.rs: invariant_panic ──────────────────────────────────
+
+  - path: "crates/cp-base/src/config/mod.rs"
+    match: 'invariant violation is unrecoverable — validated by tests::all_embedded_yaml_parses_successfully'
+    reason: >
+      invariant_panic() is the centralized panic point for build-time and
+      config invariant violations (YAML not found, theme not loaded, module
+      state not initialized). These are unrecoverable programmer errors,
+      not runtime failures. Provably unreachable: tests::all_embedded_yaml_parses_successfully
+      validates every embedded YAML schema on every cargo test run.
+    strategy: >
+      Already at minimum — single centralized panic function with
+      compile-time validation. Could add build.rs validation for
+      zero-test-dependency assurance when stable const deserialization lands.
+
+  # ── panels.rs: time_arith module ────────────────────────────────────
+
+  - path: "crates/cp-base/src/panels.rs"
+    match: 'sole choke-point for truncating time/division arithmetic'
+    reason: >
+      Centralized time/division arithmetic module: ms_to_secs(),
+      secs_to_hms(), secs_to_hms_unwrapped(), div_const(). All
+      truncating integer division is funneled here so no other file
+      triggers integer_division_remainder_used or arithmetic_side_effects
+      for division.
+    strategy: >
+      Fundamentally irreducible — integer truncation IS the desired
+      behavior for millisecond-to-second conversion and const-divisor
+      helpers. No alternative representation avoids it.
+
+  # ── module_name_repetitions: names that include their module ────────
+  # Types used via re-export where the shorter name conflicts with
+  # common identifiers (reserved words, std types, or sibling types).
+
+
+
+  # ── app/run/*: multiple_inherent_impl for App ────────────────────────
+
+  - path: "src/app/run/lifecycle.rs"
+    match: 'App methods split across run/ submodules for readability'
+    reason: >
+      App methods are split across 7 submodules in src/app/run/ for
+      readability. Each file contributes an impl App block covering a
+      distinct concern (input, lifecycle, streaming, etc.). The lint
+      fires on all impl blocks except the first (input.rs).
+    strategy: >
+      Could merge all impl blocks into a single file, but that would
+      create a 2500+ line file. The split is intentional for navigation.
+
+  - path: "src/llms/mod.rs"
+    match: "type_id/cause/provide are unstable or deprecated"
+    reason: >
+      impl Error for LlmError implements source(). The remaining
+      unimplemented methods — type_id() (private::Internal param),
+      cause() (deprecated), and provide() (unstable nightly) — cannot
+      be meaningfully implemented on stable Rust.
+    strategy: >
+      Irreducible on stable Rust. Re-evaluate when provide() stabilizes.
+

@@ -1,0 +1,80 @@
+# CODEOWNERS - Automatic reviewer assignment for Pull Requests
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# When you grow the team, replace @bigmoostache with specific reviewers per area.
+# When you move to a GitHub Organization, you can use team syntax: @org-name/team-name
+
+# =============================================================================
+# DEFAULT OWNERS - All PRs require review from these people
+# =============================================================================
+* @bigmoostache
+
+# =============================================================================
+# CORE APPLICATION
+# =============================================================================
+/src/core/                    @bigmoostache
+/src/state.rs                 @bigmoostache
+/src/actions.rs               @bigmoostache
+/src/main.rs                  @bigmoostache
+
+# =============================================================================
+# LLM INTEGRATIONS
+# =============================================================================
+/src/llms/                    @bigmoostache
+/src/api.rs                   @bigmoostache
+/src/background.rs            @bigmoostache
+
+# =============================================================================
+# TOOLS
+# =============================================================================
+/src/tools/                   @bigmoostache
+/src/tool_defs.rs             @bigmoostache
+
+# =============================================================================
+# UI / FRONTEND
+# =============================================================================
+/src/ui/                      @bigmoostache
+/src/panels/                  @bigmoostache
+/src/help/                    @bigmoostache
+/src/events.rs                @bigmoostache
+
+# =============================================================================
+# PERSISTENCE / BACKEND
+# =============================================================================
+/src/persistence/             @bigmoostache
+/src/cache.rs                 @bigmoostache
+/src/watcher.rs               @bigmoostache
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+/src/config.rs                @bigmoostache
+/src/constants.rs             @bigmoostache
+/yamls/                       @bigmoostache
+
+# =============================================================================
+# DOCUMENTATION
+# =============================================================================
+*.md                          @bigmoostache
+/docs/                        @bigmoostache
+
+# =============================================================================
+# SECURITY-SENSITIVE
+# =============================================================================
+SECURITY.md                   @bigmoostache
+.env*                         @bigmoostache
+
+# =============================================================================
+# CI/CD & PROJECT CONFIG
+# =============================================================================
+/.github/                     @bigmoostache
+Cargo.toml                    @bigmoostache
+Cargo.lock                    @bigmoostache
+run.sh                        @bigmoostache
+
+# =============================================================================
+# OPEN SOURCE / COMMUNITY
+# =============================================================================
+CODE_OF_CONDUCT.md            @bigmoostache
+CONTRIBUTING.md               @bigmoostache
+LICENSE                       @bigmoostache
