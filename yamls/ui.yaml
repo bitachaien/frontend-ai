@@ -1,0 +1,12 @@
+# UI Configuration
+
+# Tool category descriptions
+tool_categories:
+  file: "Read, write, and search files in the project"
+  tree: "Navigate and annotate the directory structure"
+  console: "Execute commands and monitor terminal output"
+  context: "Manage conversation context and system prompts"
+  todo: "Track tasks and progress during the session"
+  memory: "Store persistent memories across the conversation"
+  git: "Version control operations and repository management"
+  scratchpad: "A useful scratchpad for you to use however you like"

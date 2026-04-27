@@ -1,0 +1,22 @@
+# System prompts and panel messages
+
+# Panel display messages
+panel:
+  header: "Beginning of dynamic panel display. All content displayed below may be considered up to date."
+  timestamp: "Panel automatically generated at {iso_time}"
+  timestamp_unknown: "Panel content (timestamp unknown - static or never refreshed)"
+  footer: |
+    End of dynamic panel displays. All content displayed above may be considered up to date: it is automatically kept updated as we speak.
+
+    Current date: {current_date}
+  footer_ack: "Panel display complete. Proceeding with conversation."
+
+# Context threshold notification - sent to spine when context usage crosses the intermediary cleaning threshold
+context_threshold_notification: |
+  Context usage has crossed the cleaning threshold ({usage_pct}% of budget, {used_tokens}/{budget_tokens} tokens).
+  You should proactively manage your context to stay under the threshold:
+  - Close file panels you no longer need (Close_panel)
+  - Close grep/glob results that have served their purpose
+  - Summarize logs if there are many top-level entries (log_summarize)
+  - Close conversation history panels after extracting key information
+  Review your open panels and close any that are no longer essential.
