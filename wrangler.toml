@@ -1,0 +1,45 @@
+name = "frontend-ai"
+type = "javascript"
+account_id = "7fa36204b48228388ea974c21c26c8d4"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[env.production]
+routes = [
+  {
+    pattern = "frontend-ai-3cg.pages.dev",
+    zone_name = "pages.dev"
+  }
+]
+
+[build]
+command = "cargo build --release"
+cwd = "./"
+watch_paths = ["src/**/*.rs", "crates/**/*.rs"]
+
+[build.upload]
+format = "service-worker"
+
+[env.production.build]
+command = "cargo build --release"
+
+[triggers.crons]
+crons = ["0 0 * * *"]
+
+[env.production]
+routes = [
+  {
+    pattern = "frontend-ai-3cg.pages.dev",
+    zone_name = "pages.dev"
+  }
+]
+
+# Environment variables
+[env.production.vars]
+ENVIRONMENT = "production"
+API_URL = "https://api.frontend-ai-3cg.pages.dev"
+
+# Cloudflare Pages specific config
+[pages]
+build_output_dir = "dist"
