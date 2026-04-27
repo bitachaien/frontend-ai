@@ -2,31 +2,19 @@ name = "frontend-ai"
 type = "javascript"
 account_id = "7fa36204b48228388ea974c21c26c8d4"
 workers_dev = true
-route = ""
-zone_id = ""
 
-[env.production]
-routes = [
-  {
-    pattern = "frontend-ai-3cg.pages.dev",
-    zone_name = "pages.dev"
-  }
-]
-
+# Build configuration
 [build]
 command = "cargo build --release"
 cwd = "./"
 watch_paths = ["src/**/*.rs", "crates/**/*.rs"]
 
-[build.upload]
-format = "service-worker"
+# Cloudflare Pages output settings
+[pages]
+build_output_dir = "/"
+root_dir = "/"
 
-[env.production.build]
-command = "cargo build --release"
-
-[triggers.crons]
-crons = ["0 0 * * *"]
-
+# Production environment
 [env.production]
 routes = [
   {
@@ -35,11 +23,29 @@ routes = [
   }
 ]
 
-# Environment variables
+[env.production.build]
+command = "cargo build --release"
+
 [env.production.vars]
 ENVIRONMENT = "production"
 API_URL = "https://api.frontend-ai-3cg.pages.dev"
+RUST_ENV = "production"
+LOG_LEVEL = "info"
 
-# Cloudflare Pages specific config
-[pages]
-build_output_dir = "dist"
+# Preview environment
+[env.preview]
+routes = [
+  {
+    pattern = "frontend-ai-preview.pages.dev",
+    zone_name = "pages.dev"
+  }
+]
+
+[env.preview.build]
+command = "cargo build"
+
+[env.preview.vars]
+ENVIRONMENT = "preview"
+API_URL = "https://api.frontend-ai-preview.pages.dev"
+RUST_ENV = "development"
+LOG_LEVEL = "debug"
